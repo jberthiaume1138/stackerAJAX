@@ -81,6 +81,11 @@ var getUnanswered = function(tags) {
 	});
 };
 
+// -------------- mine  -------------------------------
+var getTopAnswerers = function(tags) {
+
+};
+
 
 $(document).ready( function() {
 	$('.unanswered-getter').submit( function(e){
@@ -90,5 +95,16 @@ $(document).ready( function() {
 		// get the value of the tags the user submitted
 		var tags = $(this).find("input[name='tags']").val();
 		getUnanswered(tags);
+	});
+
+	$('.inspiration-getter').submit(function(e){
+		e.preventDefault();
+
+		//clear previous, if any
+		$('.results').html('');
+
+		// get user input for tags, pass into the main function to get the results
+		var tags = $(this).find("input[name='answerers']").val();
+		getTopAnswerers(tags);
 	});
 });

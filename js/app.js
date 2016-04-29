@@ -82,9 +82,6 @@ var getUnanswered = function(tags) {
 };
 
 
-
-
-// -------------- mine  -------------------------------
 var getTopAnswerers = function(tags) {
 	
 	//build parameter object
@@ -97,22 +94,27 @@ var getTopAnswerers = function(tags) {
 
 	$.getJSON(url, request, function(result) {
 	 	console.log(result.items);
-
-
-
-	  	var searchResults = showSearchResults(tags, result.items.length);
-	  	 
-	  	$('.search-results').html(searchResults);
+	  	
+	  	$('.search-results').html(showSearchResults(tags, result.items.length));
 
 		$.each(result.items, function(i, item) {
 		// 		var answerers = showAnswerer(item);
 		// 		$('.results').append(answerers);
-				console.log(item);
-
 		
+			var answerer = item.user.user_id;
+			$('.results').append('<p>' + answerer + '</p>');
+			console.log(answerer);
+				//console.log(item);
 		});
 
+		
 
+		//-----------------------------------------------
+		$.each(result.items, function(i, item) {
+			var question = showQuestion(item);
+			$('.results').append(question);
+		});
+		//--------------------------------------------------
 
 	});
 

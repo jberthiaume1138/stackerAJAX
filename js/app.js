@@ -81,9 +81,65 @@ var getUnanswered = function(tags) {
 	});
 };
 
+
+
+
 // -------------- mine  -------------------------------
 var getTopAnswerers = function(tags) {
+	
+	//build parameter object
+	var request = { 
+		tag: tags,
+		site: 'stackoverflow'
+	};
 
+	var url = 'https://api.stackexchange.com/2.2/tags/' + request.tag + '/top-answerers/all_time';
+
+	$.getJSON(url, request, function(result) {
+	 	console.log(result.items);
+
+
+
+	  	var searchResults = showSearchResults(tags, result.items.length);
+	  	 
+	  	$('.search-results').html(searchResults);
+
+		$.each(result.items, function(i, item) {
+		// 		var answerers = showAnswerer(item);
+		// 		$('.results').append(answerers);
+				console.log(item);
+
+		
+		});
+
+
+
+	});
+
+
+
+
+	// $.ajax({
+	// 	url: "https://api.stackexchange.com/2.2/tags/top-answerers",
+	// 	data: request,
+	// 	dataType: "jsonp",	//use jsonp to avoid cross origin issues
+	// 	type: "GET",
+	// })
+	// .done(function(result){
+	// 	// console.log(result.items.length);
+	// 	// console.log(result.items.length);
+
+	// 	console.log(tags);
+ //  		console.log(result);
+
+
+
+
+	// })
+	// .fail(function(jqXHR, error){ //this waits for the ajax to return with an error promise object
+	// 	var errorElem = showError(error);
+	// 	$('.search-results').append(errorElem);
+	// });
 };
 
 

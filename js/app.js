@@ -93,30 +93,39 @@ var getTopAnswerers = function(tags) {
 	var url = 'https://api.stackexchange.com/2.2/tags/' + request.tag + '/top-answerers/all_time';
 
 	$.getJSON(url, request, function(result) {
-	 	console.log(result.items);
+//	 	console.log(result.items);
 	  	
 	  	$('.search-results').html(showSearchResults(tags, result.items.length));
 
+	  	console.log(result.index)
+
 		$.each(result.items, function(i, item) {
+			// console.log(i);
 		// 		var answerers = showAnswerer(item);
 		// 		$('.results').append(answerers);
-		
-			var answerer = item.user.user_id;
-			$('.results').append('<p>' + answerer + '</p>');
-			console.log(answerer);
-				//console.log(item);
+			var newDiv = showAnswerer(item,i);
+			console.log(newDiv);
+			$('#top-answerers').append(newDiv);
+			
+
+			// var answerer = item.user.user_id;
+			// // $('.results').append('<p>' + answerer + '</p>');
+			// console.log(answerer);
+			// 	//console.log(item);
+
 		});
 
-		
-
-		//-----------------------------------------------
-		$.each(result.items, function(i, item) {
-			var question = showQuestion(item);
-			$('.results').append(question);
-		});
-		//--------------------------------------------------
+		// //-----------------------------------------------
+		// $.each(result.items, function(i, item) {
+		// 	var question = showQuestion(item);
+		// 	$('.results').append(question);
+		// });
+		// //--------------------------------------------------
 
 	});
+
+	$('#top-answerers').removeClass('hidden');
+
 
 
 
@@ -144,6 +153,23 @@ var getTopAnswerers = function(tags) {
 	// });
 };
 
+var showAnswerer = function (answerer,rank) {
+
+	var result = $('.answerers').clone();
+
+	// var result = $('.answerers').clone();
+
+	console.log(rank);
+	console.log(answerer);
+
+	result.find('.answerer-detail').text(rank);
+
+	// $('.rank h2').text(rank);
+	// $('.name').text(answerer.user.display_name);
+
+	
+
+};
 
 $(document).ready( function() {
 	$('.unanswered-getter').submit( function(e){

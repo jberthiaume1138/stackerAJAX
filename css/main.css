@@ -1,3 +1,11 @@
+.answerers {
+	display: flex;
+	flex-flow: row;
+	align-items: flex-start;
+	justify-content: flex-start;
+	padding: 0.5em;
+}
+
 .container {
 	margin: 3em auto;
 	width: 600px;
@@ -35,6 +43,20 @@
 	margin-left: 3em;
 }
 
+
+.rank {
+
+}
+
+.answerer-img {
+
+}
+
+.answerer-detail {
+
+}
+
+
 .result {
 	border: 1px solid black;
 	padding: 5px;
@@ -45,3 +67,6 @@
 	background-color: #F78181;
 	padding: 1em;
 }
+
+
+

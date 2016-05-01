@@ -1,3 +1,26 @@
+$(document).ready( function() {
+	$('.unanswered-getter').submit( function(e){
+		e.preventDefault();
+		// zero out results if previous search has run
+		$('.results').html('');
+		// get the value of the tags the user submitted
+		var tags = $(this).find("input[name='tags']").val();
+		getUnanswered(tags);
+	});
+
+	$('.inspiration-getter').submit(function(e){
+		e.preventDefault();
+
+		//clear previous, if any
+		$('.results').html('');
+
+		// get user input for tags, pass into the main function to get the results
+		var tags = $(this).find("input[name='answerers']").val();
+		getTopAnswerers(tags);
+	});
+});
+
+
 // this function takes the question object returned by the StackOverflow request
 // and returns new result to be appended to DOM
 var showQuestion = function(question) {
@@ -82,113 +105,65 @@ var getUnanswered = function(tags) {
 };
 
 
-var getTopAnswerers = function(tags) {
-	
-	//build parameter object
-	var request = { 
-		tag: tags,
-		site: 'stackoverflow'
-	};
+var getTopAnswerers = function (tags) {
+	// build URL
+ 	url = "https://api.stackexchange.com/2.2/tags/" + tags + "/top-answerers/all_time?site=stackoverflow";
 
-	var url = 'https://api.stackexchange.com/2.2/tags/' + request.tag + '/top-answerers/all_time';
+ 	$.getJSON(url, function(result){
+ 		// create the # of results header
+    	var searchResults = showSearchResults(tags, result.items.length);
+  	 	$('.search-results').html(searchResults);
 
-	$.getJSON(url, request, function(result) {
-//	 	console.log(result.items);
-	  	
-	  	$('.search-results').html(showSearchResults(tags, result.items.length));
-
-	  	console.log(result.index)
-
-		$.each(result.items, function(i, item) {
-			// console.log(i);
-		// 		var answerers = showAnswerer(item);
-		// 		$('.results').append(answerers);
-			var newDiv = showAnswerer(item,i);
-			console.log(newDiv);
-			$('#top-answerers').append(newDiv);
+  	 	// process each RESULT object in the ITEMS array
+	 	$.each(result.items, function(i, item) {
+			$('.results').append(generateAnswerer(i,item));	// appends the newly populated HTML to the RESULTS wrapper
 			
-
-			// var answerer = item.user.user_id;
-			// // $('.results').append('<p>' + answerer + '</p>');
-			// console.log(answerer);
-			// 	//console.log(item);
-
+			// console.log(item);
 		});
-
-		// //-----------------------------------------------
-		// $.each(result.items, function(i, item) {
-		// 	var question = showQuestion(item);
-		// 	$('.results').append(question);
-		// });
-		// //--------------------------------------------------
-
 	});
-
-	$('#top-answerers').removeClass('hidden');
-
-
-
-
-
-	// $.ajax({
-	// 	url: "https://api.stackexchange.com/2.2/tags/top-answerers",
-	// 	data: request,
-	// 	dataType: "jsonp",	//use jsonp to avoid cross origin issues
-	// 	type: "GET",
-	// })
-	// .done(function(result){
-	// 	// console.log(result.items.length);
-	// 	// console.log(result.items.length);
-
-	// 	console.log(tags);
- //  		console.log(result);
-
-
-
-
-	// })
-	// .fail(function(jqXHR, error){ //this waits for the ajax to return with an error promise object
-	// 	var errorElem = showError(error);
-	// 	$('.search-results').append(errorElem);
-	// });
 };
 
-var showAnswerer = function (answerer,rank) {
-
-	var result = $('.answerers').clone();
-
-	// var result = $('.answerers').clone();
-
-	console.log(rank);
-	console.log(answerer);
-
-	result.find('.answerer-detail').text(rank);
-
-	// $('.rank h2').text(rank);
-	// $('.name').text(answerer.user.display_name);
-
+var generateAnswerer = function(rank,answerer) {
+	// clone the template 
+	var result = $('.templates .top-answerers').clone();
 	
+	// fill up the new template with data from the ANSWERER object
+	// TODO: make this prettier
+	var answererRank = result.find('.rank');
+	answererRank.text(rank + 1);
 
+	var answererSection1 = result.find('.section1')
+	if (rank == 0)
+	{
+		answererSection1.css('background-color','#FFD700');
+	}
+
+	if (rank == 1)
+	{
+		answererSection1.css('background-color','#C0C0C0');
+	}
+
+	if (rank == 2)
+	{
+		answererSection1.css('background-color','#CD7F32');
+	}
+
+	var answererElem = result.find('.answerer a');
+	answererElem.attr('href', answerer.user.link);
+	answererElem.text(answerer.user.display_name);
+
+	var answererImage = result.find('.image');
+	answererImage.attr('src',answerer.user.profile_image);
+
+	var postCount = result.find('.post-count');
+	postCount.text(answerer.post_count);
+
+	var score = result.find('.score');
+	score.text(answerer.score);
+
+	var reputation = result.find('.reputation');
+	reputation.text(answerer.user.reputation);
+
+	// pass the template, now populated with the values in HTML, back up so it can be appended to the wrapper DIV
+	return result;
 };
-
-$(document).ready( function() {
-	$('.unanswered-getter').submit( function(e){
-		e.preventDefault();
-		// zero out results if previous search has run
-		$('.results').html('');
-		// get the value of the tags the user submitted
-		var tags = $(this).find("input[name='tags']").val();
-		getUnanswered(tags);
-	});
-
-	$('.inspiration-getter').submit(function(e){
-		e.preventDefault();
-
-		//clear previous, if any
-		$('.results').html('');
-
-		// get user input for tags, pass into the main function to get the results
-		var tags = $(this).find("input[name='answerers']").val();
-		getTopAnswerers(tags);
-	});
-});

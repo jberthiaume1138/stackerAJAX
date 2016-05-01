@@ -132,6 +132,22 @@ var generateAnswerer = function(rank,answerer) {
 	var answererRank = result.find('.rank');
 	answererRank.text(rank + 1);
 
+	var answererSection1 = result.find('.section1')
+	if (rank == 0)
+	{
+		answererSection1.css('background-color','#FFD700');
+	}
+
+	if (rank == 1)
+	{
+		answererSection1.css('background-color','#C0C0C0');
+	}
+
+	if (rank == 2)
+	{
+		answererSection1.css('background-color','#CD7F32');
+	}
+
 	var answererElem = result.find('.answerer a');
 	answererElem.attr('href', answerer.user.link);
 	answererElem.text(answerer.user.display_name);
